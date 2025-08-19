@@ -6,6 +6,10 @@ import Signup from './pages/Signup';
 import Login from './pages/Login';
 import Dashboard from "./pages/Dashboard"
 import Profile from './pages/Profile';
+import CreateRoom from './pages/CreateRoom';
+import JoinRoom from './pages/JoinRoom';
+import GameRoom from './pages/GameRoom';
+import History from './pages/History';
 
 
 function App() {
@@ -26,6 +30,10 @@ function App() {
       <Route path={"/login"} element={<Login />} />
       <Route path={"/dashboard"} element={<Dashboard />} />
       <Route path={"/profile"} element={<Profile />} />
+      <Route path={"/create-room"} element={<CreateRoom />} />
+      <Route path={"/join-room"} element={<JoinRoom />} />
+      <Route path={"/game-room"} element={<GameRoom />} />
+      <Route path={"/history"} element={<History />} />
     </Routes>
 
 
