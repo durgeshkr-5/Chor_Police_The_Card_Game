@@ -2,10 +2,15 @@ import React, { useState, useRef, useEffect } from "react";
 import { Menu, User, LogIn, LogOut, LayoutDashboard, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../redux/features/auth/authSlice"; // <-- adjust path
 
-const Navbar = ({ isLoggedIn, onLogout }) => {
+const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+
+  const dispatch = useDispatch();
+  const { isLoggedIn } = useSelector((state) => state.auth); // <-- get auth state
 
   const profileRef = useRef(null);
   const mobileRef = useRef(null);
@@ -31,7 +36,7 @@ const Navbar = ({ isLoggedIn, onLogout }) => {
       }
     };
     if (mobileOpen) {
-      document.body.style.overflow = "hidden"; // Prevent scroll when open
+      document.body.style.overflow = "hidden";
       document.addEventListener("mousedown", handleClick);
     } else {
       document.body.style.overflow = "";
@@ -41,6 +46,12 @@ const Navbar = ({ isLoggedIn, onLogout }) => {
       document.removeEventListener("mousedown", handleClick);
     };
   }, [mobileOpen]);
+
+  const handleLogout = () => {
+    dispatch(logout()); // <-- clears token & user from Redux + localStorage
+    setProfileOpen(false);
+    setMobileOpen(false);
+  };
 
   return (
     <nav className="bg-white shadow-md fixed w-full top-0 z-50">
@@ -53,7 +64,10 @@ const Navbar = ({ isLoggedIn, onLogout }) => {
 
         {/* Right: Desktop/Tablet */}
         <div className="hidden md:flex items-center gap-6">
-          <Link to="/dashboard" className="flex items-center gap-1 hover:text-blue-600">
+          <Link
+            to="/dashboard"
+            className="flex items-center gap-1 hover:text-blue-600"
+          >
             <LayoutDashboard className="w-5 h-5" />
             Dashboard
           </Link>
@@ -83,10 +97,7 @@ const Navbar = ({ isLoggedIn, onLogout }) => {
                   </Link>
                   {isLoggedIn ? (
                     <button
-                      onClick={() => {
-                        onLogout();
-                        setProfileOpen(false);
-                      }}
+                      onClick={handleLogout}
                       className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-red-500"
                     >
                       <LogOut className="w-4 h-4" /> Logout
@@ -118,11 +129,10 @@ const Navbar = ({ isLoggedIn, onLogout }) => {
         </div>
       </div>
 
-      {/* Mobile overlay and drawer */}
+      {/* Mobile Menu */}
       <AnimatePresence>
         {mobileOpen && (
           <>
-            {/* Overlay */}
             <motion.div
               key="overlay"
               initial={{ opacity: 0 }}
@@ -131,7 +141,6 @@ const Navbar = ({ isLoggedIn, onLogout }) => {
               transition={{ duration: 0.2 }}
               className="fixed inset-0 bg-black z-40"
             />
-            {/* Drawer */}
             <motion.div
               key="drawer"
               ref={mobileRef}
@@ -164,10 +173,7 @@ const Navbar = ({ isLoggedIn, onLogout }) => {
               </Link>
               {isLoggedIn ? (
                 <button
-                  onClick={() => {
-                    onLogout();
-                    setMobileOpen(false);
-                  }}
+                  onClick={handleLogout}
                   className="flex items-center gap-2 px-6 py-4 hover:bg-gray-100 text-red-500"
                 >
                   <LogOut className="w-4 h-4" /> Logout

@@ -2,7 +2,8 @@
 import React from "react";
 import { Crown, User, ShieldAlert, UserX, Play } from "lucide-react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const roles = [
   { icon: Crown, name: "Raja", color: "text-yellow-500" },
@@ -12,6 +13,17 @@ const roles = [
 ];
 
 const Home = () => {
+  const navigate = useNavigate();
+  const { isLoggedIn } = useSelector((state) => state.auth); // <-- check Redux state
+
+  const handlePlayClick = () => {
+    if (isLoggedIn) {
+      navigate("/dashboard"); // ✅ logged in → dashboard
+    } else {
+      navigate("/signup"); // ❌ not logged in → signup
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-100 via-pink-50 to-blue-100 flex flex-col items-center pt-20 px-3">
       {/* Hero Section */}
@@ -30,8 +42,12 @@ const Home = () => {
           ChorPolice
         </h1>
         <p className="text-lg md:text-xl text-gray-700 font-medium text-center mb-8 leading-relaxed">
-          Relive the timeless childhood game of <span className="font-semibold text-yellow-600">Raja</span>, <span className="font-semibold text-green-600">Mantri</span>, <span className="font-semibold text-blue-600">Sipahi</span>, and <span className="font-semibold text-red-500">Chor</span>.  
-          Now with friends, online—anytime, anywhere!
+          Relive the timeless childhood game of{" "}
+          <span className="font-semibold text-yellow-600">Raja</span>,{" "}
+          <span className="font-semibold text-green-600">Mantri</span>,{" "}
+          <span className="font-semibold text-blue-600">Sipahi</span>, and{" "}
+          <span className="font-semibold text-red-500">Chor</span>. Now with
+          friends, online—anytime, anywhere!
         </p>
         <motion.div
           initial={{ scale: 0.9 }}
@@ -42,12 +58,12 @@ const Home = () => {
             repeatType: "reverse",
           }}
         >
-          <Link
-            to="/dashboard"
+          <button
+            onClick={handlePlayClick}
             className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-2xl font-semibold text-xl shadow-lg hover:shadow-2xl hover:scale-105 transition"
           >
             <Play className="w-7 h-7" /> Play Now
-          </Link>
+          </button>
         </motion.div>
       </motion.div>
 
@@ -62,12 +78,15 @@ const Home = () => {
           Nostalgia Corner ✨
         </h2>
         <p className="text-gray-700 text-lg mb-4 text-center">
-          Remember sitting in circles, guessing the <span className="text-red-500 font-semibold">Chor</span>,  
-          cheering as the <span className="text-yellow-600 font-semibold">Raja</span>, and  
-          catching the culprit as <span className="text-blue-600 font-semibold">Sipahi</span>?  
+          Remember sitting in circles, guessing the{" "}
+          <span className="text-red-500 font-semibold">Chor</span>, cheering as
+          the <span className="text-yellow-600 font-semibold">Raja</span>, and
+          catching the culprit as{" "}
+          <span className="text-blue-600 font-semibold">Sipahi</span>?
         </p>
         <p className="text-gray-600 text-center mb-8">
-          With ChorPolice, those laughs, rivalries, and memories come alive again in a digital twist.
+          With ChorPolice, those laughs, rivalries, and memories come alive
+          again in a digital twist.
         </p>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 justify-center">
