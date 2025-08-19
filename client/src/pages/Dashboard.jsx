@@ -1,15 +1,20 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-const Dashboard = ({ user }) => {
+const Dashboard = () => {
+  const { user } = useSelector((state) => state.auth); // ✅ get user from Redux
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-100 p-6 mt-15">
       <header className="max-w-4xl mx-auto mb-8">
         <h1 className="text-3xl font-extrabold text-gray-900">
-          Welcome back, <span className="text-blue-600">{user?.name || "Player"}</span>!
+          Welcome back,{" "}
+          <span className="text-blue-600">{user?.name || "Player"}</span>!
         </h1>
         <p className="mt-2 text-gray-700">
-          Get ready to play ChorPolice — the classic Raja, Mantri, Chor, Sipahi game reinvented for online fun.
+          Get ready to play ChorPolice — the classic Raja, Mantri, Chor, Sipahi
+          game reinvented for online fun.
         </p>
       </header>
 

@@ -4,6 +4,9 @@ import { Crown, User, ShieldAlert, UserX, Play } from "lucide-react";
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { loadUserFromStorage } from "../redux/features/auth/authSlice";
 
 const roles = [
   { icon: Crown, name: "Raja", color: "text-yellow-500" },
@@ -14,13 +17,18 @@ const roles = [
 
 const Home = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { isLoggedIn } = useSelector((state) => state.auth); // <-- check Redux state
+
+  useEffect(() => {
+    dispatch(loadUserFromStorage());
+  }, [dispatch]);
 
   const handlePlayClick = () => {
     if (isLoggedIn) {
       navigate("/dashboard"); // ✅ logged in → dashboard
     } else {
-      navigate("/signup"); // ❌ not logged in → signup
+      navigate("/login"); // ❌ not logged in → login
     }
   };
 

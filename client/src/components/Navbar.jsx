@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Menu, User, LogIn, LogOut, LayoutDashboard, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/features/auth/authSlice"; // <-- adjust path
 
@@ -9,6 +10,7 @@ const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
 
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { isLoggedIn } = useSelector((state) => state.auth); // <-- get auth state
 
@@ -51,6 +53,7 @@ const Navbar = () => {
     dispatch(logout()); // <-- clears token & user from Redux + localStorage
     setProfileOpen(false);
     setMobileOpen(false);
+    navigate("/");
   };
 
   return (
