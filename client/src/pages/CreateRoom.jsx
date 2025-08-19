@@ -1,48 +1,59 @@
+// pages/CreateRoom.jsx
 import React, { useState } from "react";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useSocket } from "../context/SocketContext";
+import { setRoom, setPlayers, setStatus } from "../redux/features/game/gameSlice";
+
+
+
 
 const CreateRoom = () => {
-  const [roomCode, setRoomCode] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+    const {user} = useSelector((state) => state.auth)
+  const [name, setName] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const socket = useSocket();
 
-  const handleCreateRoom = async () => {
-    setLoading(true);
-    setError("");
-    try {
-      const response = await axios.post("/api/rooms/create");
-      setRoomCode(response.data.roomCode); // assuming backend returns roomCode
-    } catch (err) {
-      setError(err.response?.data?.message || "Failed to create room");
-    } finally {
-      setLoading(false);
-    }
+  const handleCreateRoom = (e) => {
+    e.preventDefault();
+    if (!name) return;
+
+    socket.emit("createRoom", { userId: user.id, name:user.name });
+
+    socket.once("roomCreated", ({ roomId, players }) => {
+      dispatch(setRoom(roomId));
+      dispatch(setPlayers(players));
+      dispatch(setStatus("waiting"));
+      navigate(`/game-room/${roomId}`);
+    });
+
+    socket.once("errorCreating", (msg) => {
+      alert(msg);
+    });
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-green-50 to-blue-100 px-4">
-      <div className="max-w-md w-full bg-white p-8 rounded-xl shadow-md text-center">
-        <h1 className="text-3xl font-bold mb-6">Create a New Game Room</h1>
-        <button
-          onClick={handleCreateRoom}
-          disabled={loading}
-          className="px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition disabled:opacity-50"
-        >
-          {loading ? "Creating..." : "Create Room"}
+    <div className="flex flex-col items-center justify-center min-h-screen">
+        <pre>
+            <code>
+                state:{JSON.stringify(user)}
+            </code>
+        </pre>
+      <h1 className="text-2xl font-bold mb-4">Create a Room</h1>
+      <form onSubmit={handleCreateRoom} className="space-y-4">
+        <input
+          type="text"
+          placeholder="Enter Your Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+          className="px-3 py-2 border rounded"
+        />
+        <button type="submit" className="px-4 py-2 bg-green-500 text-white rounded">
+          Create Room
         </button>
-
-        {roomCode && (
-          <div className="mt-6 bg-green-100 border border-green-400 rounded-lg p-4 text-green-900 font-mono text-xl select-all">
-            Room Code: <span>{roomCode}</span>
-          </div>
-        )}
-
-        {error && (
-          <p className="mt-4 text-red-500 font-medium">
-            {error}
-          </p>
-        )}
-      </div>
+      </form>
     </div>
   );
 };

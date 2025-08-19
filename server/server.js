@@ -5,6 +5,7 @@ require("dotenv").config();
 const connectMongoDB = require("./config/mongoDb.config");
 const authRouter = require("./routes/auth.routes");
 const registerGameHandlers = require("./sockets/gameSocket");
+const roomsRouter = require("./routes/room.routes")
 const cors = require("cors")
 
 // constants
@@ -24,6 +25,7 @@ app.get("/test", (req, res) => {
 });
 
 app.use("/api/auth", authRouter);
+app.use("/api/rooms", roomsRouter);
 
 // undefined routes
 app.use((req, res) => {
