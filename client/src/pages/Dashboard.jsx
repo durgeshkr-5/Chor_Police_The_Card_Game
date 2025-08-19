@@ -1,29 +1,35 @@
 // src/pages/Dashboard.jsx
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { useSocket } from "../context/SocketContext";
+import { useSelector } from "react-redux;
+// import { useSocket } from "../context/SocketContext";
 
-const Dashboard = ({ user }) => {
-  const socket = useSocket();
-  const { roomId } = useSelector((state) => state.game);
-  const [connected, setConnected] = useState(false);
+// const Dashboard = ({ user }) => {
+//   const socket = useSocket();
+//   const { roomId } = useSelector((state) => state.game);
+//   const [connected, setConnected] = useState(false);
 
-  // Track actual socket connection
-  useEffect(() => {
-    if (!socket) return;
+//   // Track actual socket connection
+//   useEffect(() => {
+//     if (!socket) return;
 
-    const handleConnect = () => setConnected(true);
-    const handleDisconnect = () => setConnected(false);
+//     const handleConnect = () => setConnected(true);
+//     const handleDisconnect = () => setConnected(false);
 
-    socket.on("connect", handleConnect);
-    socket.on("disconnect", handleDisconnect);
+//     socket.on("connect", handleConnect);
+//     socket.on("disconnect", handleDisconnect);
 
-    return () => {
-      socket.off("connect", handleConnect);
-      socket.off("disconnect", handleDisconnect);
-    };
-  }, [socket]);
+//     return () => {
+//       socket.off("connect", handleConnect);
+//       socket.off("disconnect", handleDisconnect);
+//     };
+//   }, [socket]);
+
+
+
+const Dashboard = () => {
+  const { user } = useSelector((state) => state.auth); // ✅ get user from Redux
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-100 p-6 mt-16">
@@ -34,8 +40,13 @@ const Dashboard = ({ user }) => {
           <span className="text-blue-600">{user?.name || "Player"}</span>!
         </h1>
         <p className="mt-2 text-gray-700">
-          Get ready to play <span className="font-bold">ChorPolice</span> — the
-          classic Raja, Mantri, Chor, Sipahi game reinvented for online fun.
+
+//           Get ready to play <span className="font-bold">ChorPolice</span> — the
+//           classic Raja, Mantri, Chor, Sipahi game reinvented for online fun.
+
+          Get ready to play ChorPolice — the classic Raja, Mantri, Chor, Sipahi
+          game reinvented for online fun.
+
         </p>
 
         {/* Connection + Room Info */}

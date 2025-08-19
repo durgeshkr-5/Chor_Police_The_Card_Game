@@ -8,7 +8,10 @@ export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async (credentials, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${baseUrl}/api/auth/login`, credentials);
+      const response = await axios.post(
+        `${baseUrl}/api/auth/login`,
+        credentials
+      );
       // Expected response: { user: {...}, token: "xxxx" }
       return response.data;
     } catch (err) {
@@ -113,5 +116,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout, setCredentials, clearError, loadUserFromStorage } = authSlice.actions;
+export const { logout, setCredentials, clearError, loadUserFromStorage } =
+  authSlice.actions;
 export default authSlice.reducer;
